@@ -1,0 +1,57 @@
+
+#include <WiFiManager.h>         // https://github.com/tzapu/WiFiManager
+#include <ThingerESP8266.h>
+
+#define USERNAME "rehanmohiuddin"
+#define DEVICE_ID "nodemcu"
+#define DEVICE_CREDENTIAL "vHi4CRJomuoM$5"
+
+//Authors RehanMohiuddin,C.Prateek
+ThingerESP8266 thing(USERNAME, DEVICE_ID, DEVICE_CREDENTIAL);
+
+void setup() {
+  Serial.begin(115200);
+  
+  WiFiManager wifiManager;
+  wifiManager.resetSettings();
+
+  wifiManager.setAPStaticIPConfig(IPAddress(10,0,1,1), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
+  wifiManager.autoConnect("APROR");
+  // or use this for auto generated name ESP + ChipID
+  //wifiManager.autoConnect();
+  
+  // if you get here you have connected to the WiFi
+  Serial.println("Connected.....");
+  Serial.println(WiFi.SSID());
+  Serial.println(WiFi.psk());
+  Serial.begin(115200);
+   pinMode(LED_BUILTIN, OUTPUT);
+   pinMode(D3, OUTPUT);
+   pinMode(D4, OUTPUT);
+   pinMode(D5, OUTPUT);
+   pinMode(D7, OUTPUT);
+   digitalWrite(LED_BUILTIN,LOW);
+ //Blynk.begin(auth,"","");
+ 
+
+  //thing.add_wifi(SSId, SSID_PASSWORD);
+
+  // digital pin control example (i.e. turning on/off a light, a relay, configuring a parameter, etc)
+  thing["led"] << digitalPin(LED_BUILTIN);
+  thing["led1"] << digitalPin(D3);
+  thing["led2"] << digitalPin(D4);
+  thing["led3"] << digitalPin(D5);
+  thing["led4"] << digitalPin(D7);
+
+  // resource output example (i.e. reading a sensor value)
+  thing["millis"] >> outputValue(millis());
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+Serial.println('!');
+Serial.println(digitalRead(D3));
+thing.handle();
+}
